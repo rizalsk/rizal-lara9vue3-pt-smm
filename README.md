@@ -41,7 +41,8 @@ This is a lite Blog CMS based on [Laravel PHP Framework](https://laravel.com/doc
 
 	```
     ##SQLite
-	DB_DRIVER=sqlite
+	DB_DRIVER=database.sqlite
+	## create database.sqlite file insise database directory
 
     ##MySQL
     DB_DRIVER=mysql
@@ -92,6 +93,6 @@ This is a lite Blog CMS based on [Laravel PHP Framework](https://laravel.com/doc
 All frontend libraries are managed using **Node.js packages**:
 
 1. [Vue JS](https://vuejs.org)
-2. [Vue Router](https://router.vuejs.org/)
-3. [Axios](https://axios-http.com/docs/intro)
-
+1. [Bootstrap 5](https://getbootstrap.com/docs/5.3/getting-started/download/)
+1. [Vue Router](https://router.vuejs.org/)
+1. [Axios](https://axios-http.com/docs/intro)
