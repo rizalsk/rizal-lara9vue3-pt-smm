@@ -20,6 +20,7 @@
                 <table class="table table-dark table-hover table-bordered">
                     <thead class="thead-light text-white">
                         <tr>
+                            <th class="text-center" scope="col">#</th>
                             <th class="text-center" scope="col">NIK Peminta</th>
                             <th class="text-center" scope="col">Nama</th>
                             <th class="text-center" scope="col">Departemen</th>
@@ -29,7 +30,7 @@
                     </thead>
                     <tbody>
                         <tr v-if="permintaans.length == 0 && !loading">
-                            <td colspan="5" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <div class="alert alert-danger mb-0">
                                     Data Belum Tersedia!
                                 </div>
@@ -37,6 +38,7 @@
                         </tr>
                         <tr v-else v-for="(permintaan, index) in permintaans" :key="index">
                             
+                            <td class="text-center">{{ index + 1 }}</td>
                             <td>{{ permintaan.staff_nik }}</td>
                             <td>{{ permintaan.staff.nama }}</td>
                             <td>{{ permintaan.staff.departemen.nama }}</td>
@@ -47,10 +49,10 @@
                                 </button>
                                 <!-- <button class="btn btn-sm btn-warning rounded-sm shadow border-0 mx-1 rounded-circle">
                                     <i class="bi bi-pencil-fill"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger rounded-sm shadow border-0 mx-1 rounded-circle">
-                                    <i class="bi bi-trash-fill"></i>
                                 </button> -->
+                                <button class="btn btn-sm btn-danger rounded-sm shadow border-0 mx-1 rounded-circle" @click="confirmDelete(permintaan.id)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -81,6 +83,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Confirm -->
+    <div class="modal fade" id="modal-confirmation" aria-hidden="true" aria-labelledby="modal-confirmationLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-body p-0">
+                    <div class="card border-0 rounded shadow">
+                        <div class="card-body p-5">
+                            <div class="my-4 d-flex justify-content-between align-items-center">
+                                Anda ingin melanjutkan menghapus data ini? <i class="ml-2 fs-1 bi bi-question-octagon-fill text-warning"></i>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-outline-primary mx-2" @click="cancelDelete">
+                                    Tidak
+                                </button>
+                                <button class="btn btn-danger mx-2" @click="deletePermintaan">
+                                    <i class="bi bi-trash3"></i> Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
 </template>
 
 
@@ -113,7 +141,10 @@ export default {
             permintaans:[],
             permintaan:{},
             myModal: null,
+            modalConfirm: null,
             aksi: 'list',
+            delete_id: null,
+            delete: false,
             errors:{}
         }
     },
@@ -154,6 +185,34 @@ export default {
                 this.$emit('toggle-loading', false);
             })
         },
+        confirmDelete(id){
+            this.delete_id = id;
+            this.modalConfirm.show();
+        },
+        cancelDelete(){
+            this.modalConfirm.hide();
+            this.delete_id = null;
+            this.aksi = 'list';
+        },
+        async deletePermintaan(){
+            const id = this.delete_id;
+
+            if(id !== null){
+                this.$emit('toggle-loading', true);
+                await api.delete(`/permintaans/${id}`)
+                .then(response => {
+                    this.permintaan = response.data.data;
+                    this.aksi = 'delete';
+                    this.fetchDataPermintaans()
+                    notify('success', response.data.message )
+                })
+                .catch(this.errorHandler)
+                .finally(()=>{
+                    this.$emit('toggle-loading', false);
+                })
+            }
+            await this.cancelDelete();
+        },
         createPermintaan(){
             this.aksi = 'create'
             this.myModal.show();
@@ -164,6 +223,7 @@ export default {
     },
     mounted() {
         this.myModal = new bootstrap.Modal(document.getElementById('myModal'))
+        this.modalConfirm = new bootstrap.Modal(document.getElementById('modal-confirmation'))
         this.$emit('toggle-loading', true);
         this.fetchDataPermintaans()
     },

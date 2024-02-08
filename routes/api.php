@@ -18,7 +18,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [PermintaanController::class, 'index']);
         Route::get('/{id}', [PermintaanController::class, 'show']);
         Route::post('/', [PermintaanController::class, 'store']);
-        Route::delete('/', [PermintaanController::class, 'destroy']);
+        Route::delete('/{id}', [PermintaanController::class, 'destroy']);
         //Route::put('/{id}', [PermintaanController::class, 'update']);
     });
 

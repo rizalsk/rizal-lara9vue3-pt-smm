@@ -127,4 +127,22 @@ class PermintaanController extends Controller
 
         
     }
+
+    public function destroy($id)
+    {
+        if($permintaan = Permintaan::where('id', $id)->first()){
+            $permintaan->delete();
+            DetailPermintaan::where('permintaan_id', $id)->delete();
+            return response()->json([
+                'message' => 'data permintaan telah terhapus',
+                'success' => true,
+                'data' => $permintaan
+            ], 200);
+        }
+        
+        return response()->json([
+            'message' => 'data permintaan tidak ditemukan',
+            'success' => false,
+        ], 400);
+    }
 }
