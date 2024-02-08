@@ -1,0 +1,5 @@
+.form-control:disabled, .form-control[readonly], .form-control:disabled:focus, .form-control[readonly]:focus
+{
+  background-color: #e9ecef;
+  opacity: 1;
+}
