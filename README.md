@@ -41,7 +41,8 @@ This is a lite Blog CMS based on [Laravel PHP Framework](https://laravel.com/doc
 
 	```
     ##SQLite
-	DB_DRIVER=database.sqlite
+	DB_DRIVER=sqlite
+	DB_DATABASE_FILE=db.sqlite
 	## create database.sqlite file insise database directory
 
     ##MySQL
